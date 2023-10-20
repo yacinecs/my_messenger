@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "401470902575",
+    "project_id": "bina-718d7",
+    "storage_bucket": "bina-718d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401470902575:android:deed3373a4fd223ad011da",
+        "android_client_info": {
+          "package_name": "com.example.messen_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe9_rkAiQ262_JRw7eO8IVyzsPFJtQW1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
