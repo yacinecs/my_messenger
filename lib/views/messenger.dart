@@ -1,30 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:messen_clone/login.dart';
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
-}
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-  bool IsAuth=false;
-  
-  @override
-  Widget build(BuildContext context) {
-    if(IsAuth){
-    return const MaterialApp(
-      title: 'messenger',
-      home: Clone(),
-    );}
-    else{
-      return const MaterialApp(
-        title: 'messenger',
-        home: LoginPage(),
-      );
-    }
-  }
-}
 
 class Clone extends StatefulWidget {
   const Clone({Key? key}) : super(key: key);
@@ -146,7 +120,7 @@ class CloneState extends State<Clone> {
 class ChatScreen extends StatefulWidget {
   final String chatName; // You can pass the chat name or any necessary data here
 
-  const ChatScreen(this.chatName);
+  const ChatScreen(this.chatName, {super.key});
 
   @override
     _ChatScreenState createState() => _ChatScreenState();
@@ -176,12 +150,12 @@ class _ChatScreenState extends State<ChatScreen> {
 class ChatScreenBody extends StatelessWidget {
   final List<String> chatMessages;
 
-  ChatScreenBody(this.chatMessages);
+  const ChatScreenBody(this.chatMessages, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       children: chatMessages
           .map((message) => ChatMess(text: message))
           .toList(),
@@ -190,22 +164,22 @@ class ChatScreenBody extends StatelessWidget {
 }
 class ChatMess extends StatelessWidget {
   final String text;
-  const ChatMess({required this.text});
+  const ChatMess({super.key, required this.text});
 
   @override
    Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight, // You can change this as needed
       child: Container(
-        margin: EdgeInsets.only(top: 8),
-        padding: EdgeInsets.all(12),
+        margin: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.blue,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           text,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -214,15 +188,15 @@ class ChatMess extends StatelessWidget {
 class ChatInputField extends StatelessWidget {
   final Function(String) onSendMessage;
 
-  ChatInputField({required this.onSendMessage});
+  ChatInputField({super.key, required this.onSendMessage});
 
   final messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(16),
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(color: Colors.grey),
         ),
@@ -232,14 +206,14 @@ class ChatInputField extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: messageController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Type a message',
                 border: InputBorder.none,
               ),
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: () {
               String message = messageController.text;
               if (message.isNotEmpty) {
