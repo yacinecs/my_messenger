@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Clone extends StatefulWidget {
@@ -8,6 +10,7 @@ class Clone extends StatefulWidget {
 }
 
 class CloneState extends State<Clone> {
+  final user = FirebaseAuth.instance.currentUser;
   int _currentindex = 0;
   @override
   Widget build(BuildContext context) {
@@ -118,16 +121,24 @@ class CloneState extends State<Clone> {
 }
 }
 class ChatScreen extends StatefulWidget {
-  final String chatName; // You can pass the chat name or any necessary data here
+  final String chatName;
 
-  const ChatScreen(this.chatName, {super.key});
+  const ChatScreen(this.chatName, {Key? key}) : super(key: key);
 
   @override
-    _ChatScreenState createState() => _ChatScreenState();
-
+  _ChatScreenState createState() => _ChatScreenState();
 }
+
 class _ChatScreenState extends State<ChatScreen> {
-  List<String> chatMessages = ['Hello!', 'Hi there!']; // Initial chat messages
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final TextEditingController messageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize any setup or listeners for your chat screen, if needed.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,20 +146,85 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.chatName),
       ),
-      body: ChatScreenBody(chatMessages),
-      bottomSheet: ChatInputField(
-        onSendMessage: (message) {
-          // Handle sending the message and updating the chatMessages list
-          setState(() {
-            chatMessages.add(message);
-          });
-        },
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: firestore
+                  .collection('chat_messages')
+                  .where('chatName', isEqualTo: widget.chatName)
+                  .orderBy('timestamp')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+          
+                
+
+                List<QueryDocumentSnapshot> messages = snapshot.data!.docs;
+                List<Widget> messageWidgets = [];
+
+                for (var message in messages) {
+                  String text = message['text'];
+                  String sender = message['sender'];
+                  bool isSentMessage = sender == auth.currentUser?.uid;
+                  messageWidgets.add(
+                    ChatMess(text: text, isSentMessage: isSentMessage),
+                  );
+                }
+
+                return ListView(
+                  children: messageWidgets,
+                );
+              }
+              else{
+                return const Scaffold(
+                );
+              }
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: messageController,
+                    decoration: const InputDecoration(
+                      hintText: 'Type a message',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: () {
+                    String messageText = messageController.text;
+                    if (messageText.isNotEmpty) {
+                      sendMessage(messageText);
+                      messageController.clear();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+
+  void sendMessage(String messageText) {
+    firestore.collection('chat_messages').add({
+      'sender': auth.currentUser?.uid,
+      'chatName': widget.chatName,
+      'text': messageText,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
 }
+
 class ChatScreenBody extends StatelessWidget {
-  final List<String> chatMessages;
+  final List<Map<String, dynamic>> chatMessages;
 
   const ChatScreenBody(this.chatMessages, {super.key});
 
@@ -157,24 +233,30 @@ class ChatScreenBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: chatMessages
-          .map((message) => ChatMess(text: message))
+          .map((message) => ChatMess(
+                text: message['text'],
+                isSentMessage: message['isSent'],
+              ))
           .toList(),
     );
   }
 }
 class ChatMess extends StatelessWidget {
   final String text;
-  const ChatMess({super.key, required this.text});
+  final bool isSentMessage;
+
+  ChatMess({Key? key, required this.text, required this.isSentMessage})
+      : super(key: key);
 
   @override
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight, // You can change this as needed
+      alignment: isSentMessage ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(top: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: isSentMessage ? Colors.blue : Colors.green, // Customize colors
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
@@ -185,6 +267,7 @@ class ChatMess extends StatelessWidget {
     );
   }
 }
+
 class ChatInputField extends StatelessWidget {
   final Function(String) onSendMessage;
 

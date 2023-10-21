@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "401470902575",
-    "project_id": "bina-718d7",
-    "storage_bucket": "bina-718d7.appspot.com"
+    "project_number": "42995674924",
+    "project_id": "binatna-51ab6",
+    "storage_bucket": "binatna-51ab6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:401470902575:android:deed3373a4fd223ad011da",
+        "mobilesdk_app_id": "1:42995674924:android:452d36eafa344f5d014689",
         "android_client_info": {
           "package_name": "com.example.messen_clone"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBe9_rkAiQ262_JRw7eO8IVyzsPFJtQW1c"
+          "current_key": "AIzaSyAjfDtrKI8cA9_LnWka1L6ofqzp2Spx4TI"
         }
       ],
       "services": {
