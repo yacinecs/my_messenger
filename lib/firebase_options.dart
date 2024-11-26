@@ -49,20 +49,3 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAjfDtrKI8cA9_LnWka1L6ofqzp2Spx4TI',
-    appId: '1:42995674924:android:452d36eafa344f5d014689',
-    messagingSenderId: '42995674924',
-    projectId: 'binatna-51ab6',
-    storageBucket: 'binatna-51ab6.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCyXstfbg7AdSAtWC-4yHPwBRvBQ3rCUAM',
-    appId: '1:42995674924:ios:3de3bf5da092082d014689',
-    messagingSenderId: '42995674924',
-    projectId: 'binatna-51ab6',
-    storageBucket: 'binatna-51ab6.appspot.com',
-    iosBundleId: 'com.example.messenClone',
-  );
-}
